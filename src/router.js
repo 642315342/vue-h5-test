@@ -21,12 +21,13 @@ export default new Router({
   //   }
   //   return { x: 0, y: to.meta.savedPosition || 0 };
   // },
+  //   component: () => import(/* webpackChunkName: "about" */ './views/login'),
   routes: [
     {
       path: '/',
       name: 'login',
       meta: { isKeepAlive: false },
-      component: () => import(/* webpackChunkName: "about" */ './views/login'),
+      component: () => import('./views/login'),
     },
     {
       path: '/imgLazyLoad',
@@ -41,10 +42,10 @@ export default new Router({
       component: () => import('./views/routerLazyLoad'),
     },
     {
-      path: '/2',
-      name: 'test2',
-      meta: { isKeepAlive: true },
-      component: () => import('./views/swiper'),
+      path: '/about',
+      name: 'about',
+      meta: { isKeepAlive: false },
+      component: () => import('./views/about'),
     },
   ],
 })

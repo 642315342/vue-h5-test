@@ -41,11 +41,9 @@ module.exports = {
       .set('@', resolve('src'))
       .set('@assets', resolve('src/assets'))
     // 这里只写了两个个，你可以自己再加，按这种格式.set('', resolve(''))
-    if (process.env.use_analyzer) { // 分析
-      config
-        .plugin('webpack-bundle-analyzer')
-        .use(require('webpack-bundle-analyzer').BundleAnalyzerPlugin)
-    }
+    config
+      .plugin('webpack-bundle-analyzer')
+      .use(require('webpack-bundle-analyzer').BundleAnalyzerPlugin)
   },
 
 }

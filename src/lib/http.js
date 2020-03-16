@@ -28,6 +28,7 @@ axios.interceptors.response.use(
   (response) => {
     loading.close()
     const { status } = response
+    console.log('response---', response)
     if (status === 200) {
       return Promise.resolve(response)
     }
@@ -37,6 +38,7 @@ axios.interceptors.response.use(
     return Promise.reject(response)
   },
   (err) => {
+    console.log('err---', err)
     loading.close()
     Message('服务异常')
     return Promise.reject(err)

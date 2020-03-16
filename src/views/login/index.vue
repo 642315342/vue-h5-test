@@ -1,13 +1,14 @@
 <template>
   <div class="login">
     <el-input class="el-input" placeholder="请输入内容" v-model="userName" clearable></el-input>
-    <el-input class="el-input" placeholder="请输入内容" v-model="password" show-password clearable></el-input>
+    <el-input class="el-input" placeholder="请输入内容" v-model="password" show-password clearable>
+    </el-input>
     <el-button @click="handleEvent">登录</el-button>
-    <child aaa="asdasd"/>
+    <child v-if="childShow" aaa="asdasd"/>
   </div>
 </template>
 <script>
-import { mapActions } from 'vuex';
+import { mapActions } from 'vuex'
 
 export default {
   data() {
@@ -16,13 +17,11 @@ export default {
       userName: 'lal',
       password: 'lpz',
       arr1: [0, 1, 2],
-    };
+      childShow: false,
+    }
   },
   components: {
-    child: () => import('./component'),
-  },
-  created() {
-    this.$on('myEvent', this.eventTest);
+    child: () => import('./components/child'),
   },
   beforeDestroy() {
     // console.log('login destory');
@@ -30,16 +29,16 @@ export default {
   methods: {
     ...mapActions(['login']),
     methNow() {
-      return new Date().getTime();
+      return new Date().getTime()
     },
     eventTest(...arg) {
-      console.log('myEvent触发；', arg);
+      console.log('myEvent触发；', arg)
     },
     handleEvent() {
-      this.$emit('myEvent', 'a', 'b');
+      this.childShow = true
     },
   },
-};
+}
 </script>
 <style scoped lang='scss'>
 .login {
