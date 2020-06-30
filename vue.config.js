@@ -1,4 +1,5 @@
 const path = require('path')
+const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer')
 
 function resolve(dir) {
   return path.join(__dirname, dir)
@@ -27,7 +28,7 @@ module.exports = {
   // 默认情况下 babel-loader 会忽略所有 node_modules 中的文件。如果你想要通过 Babel 显式转译一个依赖，可以在这个选项中列出来。
   transpileDependencies: [],
   // 如果你不需要生产环境的 source map，可以将其设置为 false 以加速生产环境构建。
-  productionSourceMap: false,
+  productionSourceMap: true,
   // 设置生成的 HTML 中 <link rel="stylesheet"> 和 <script> 标签的 crossorigin 属性。需要注意的是该选项
   // 仅影响由 html-webpack-plugin 在构建时注入的标签 - 直接写在模版 (public/index.html) 中的标签不受影响。
   crossorigin: undefined,
@@ -43,13 +44,64 @@ module.exports = {
     // 这里只写了两个个，你可以自己再加，按这种格式.set('', resolve(''))
     config
       .plugin('webpack-bundle-analyzer')
-      .use(require('webpack-bundle-analyzer').BundleAnalyzerPlugin)
+      .use(BundleAnalyzerPlugin)
+    // 移除 prefetch 插件
+    config.plugins.delete('prefetch')
   },
-
+  configureWebpack: () => ({
+    optimization: {
+      splitChunks: {
+        chunks: 'all',
+        minSize: 1,
+        // cacheGroups: {
+        //   elementUI: {
+        //     name: 'chunk-elementUI', // 单独将 elementUI 拆包
+        //     priority: 20, // 权重要大于 vendor 和 app 不然会被打包进 libs 或者 app
+        //     test: /[\\/]node_modules[\\/]element-ui[\\/]/,
+        //   },
+        //   VUE: {
+        //     name: 'chunk-vue', // 单独将 VUE 拆包
+        //     priority: 20, // 权重要大于 vendor 和 app 不然会被打包进 libs 或者 app
+        //     test: /[\\/]node_modules[\\/]vue[\\/]/,
+        //   },
+        //   // Hello: {
+        //   //   name: 'chunk-Util', // 单独将 VUE 拆包
+        //   //   priority: 20, // 权重要大于 vendor 和 app 不然会被打包进 libs 或者 app
+        //   //   test: //,
+        //   // },
+        //   vendor: {
+        //     name: 'vendor',
+        //     chunks: 'initial', // 只打包初始时依赖的第三方
+        //     priority: 10,
+        //     test: /node_modules\/(.*)\.js/,
+        //   },
+        // },
+      },
+    },
+  }),
+  devServer: { // 设置代理
+    hot: true, // 热加载
+    port: 8085, // 端口
+    https: false, // false关闭https，true为开启
+    open: true, // 自动打开浏览器
+    proxy: {
+      '/api': { // 本地
+        target: 'http://127.0.0.1:3000/',
+        changeOrigin: true,
+        pathRewrite: {
+          '/api': '',
+        },
+      },
+      '/mock': { // 本地
+        target: 'http://127.0.0.1:3000/',
+        changeOrigin: true,
+      },
+    },
+  },
 }
 /**
  *
-    //允许我们更细粒度的控制 webpack 的内部配置,例如：以下操作我们可以成功修改 webpack 中 module 项里配置 rules 规则为图片下的 url-loader 值，将其 limit 限制改为 5M
+  //允许我们更细粒度的控制 webpack 的内部配置,例如：以下操作我们可以成功修改 webpack 中 module 项里配置 rules 规则为图片下的 url-loader 值，将其 limit 限制改为 5M
     chainWebpack: config => {
         config.module.rule("images")
         .use("url-loader")
@@ -65,17 +117,6 @@ module.exports = {
         } else {
             // 为开发环境修改配置...
         }
-    },
-    // css相关配置
-    css: {
-        // 是否使用css分离插件 ExtractTextPlugin 生产环境下是true,开发环境下是false
-        extract: true,
-        // 开启 CSS source maps?
-        sourceMap: false,
-        // css预设器配置项
-        loaderOptions: {},
-        // 启用 CSS modules for all css / pre-processor files.
-        modules: false
     },
     // webpack-dev-server 相关配置
     devServer: { // 设置代理

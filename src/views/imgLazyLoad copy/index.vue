@@ -19,23 +19,21 @@
       <img src="" class="image-item"  lazyload="true" data-original="https://img01.az.jd.com/ins-lbl/image/5.png"/>
       <img src="" class="image-item"  lazyload="true" data-original="https://img01.az.jd.com/ins-lbl/image/6.png"/>
       <img src="" class="image-item"  lazyload="true" data-original="https://img01.az.jd.com/ins-lbl/image/7.png"/>
-      <img v-lazy data-src="https://img01.az.jd.com/ins-lbl/image/7.png" />
     </div>
+    <child v-if="childShow" aaa="asdasd"/>
+    <child1 v-if="childShow1" aaa="asdasd"/>
+    <child2 />
+    <child3 />
+    <child4 />
+    <child5 />
+    <child6 />
+    <child7 />
     <hello />
   </div>
 </template>
 <script>
-import Vue from 'vue'
 import Hello from '@/components/HelloWorld.vue'
 import s from '@/components/aaa'
-
-Vue.directive('lazy', {
-  // 当被绑定的元素插入到 DOM 中时……
-  inserted(el) {
-    console.log('lazy', el)
-    el.setAttribute('lazyload', true)
-  },
-})
 
 console.log(s)
 export default {
@@ -51,6 +49,14 @@ export default {
     this.myThrottle(this.handleScroll)()
   },
   components: {
+    child: () => import(/* webpackPrefetch: true */ './components/Child'),
+    child1: () => import('./components/Child1'),
+    child2: () => import('./components/Child2'),
+    child3: () => import('./components/Child3'),
+    child4: () => import('./components/Child4'),
+    child5: () => import('./components/Child5'),
+    child6: () => import('./components/Child6'),
+    child7: () => import('./components/Child7'),
     Hello,
   },
   methods: {

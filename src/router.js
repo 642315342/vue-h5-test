@@ -6,6 +6,44 @@ Vue.use(Router)
 
 export default new Router({
   mode: 'history',
+  routes: [
+    {
+      path: '/',
+      name: 'login',
+      meta: { isKeepAlive: false },
+      component: () => import(/* webpackChunkName: "login" */'./views/login'),
+    },
+    {
+      path: '/imgLazyLoad',
+      name: 'imgLazyLoad',
+      meta: { isKeepAlive: false },
+      component: () => import(/* webpackChunkName: "imgLazyLoad" */'./views/imgLazyLoad'),
+    },
+    {
+      path: '/routerLazyLoad',
+      name: 'routerLazyLoad',
+      meta: { isKeepAlive: false },
+      component: () => import(/* webpackChunkName: "routerLazyLoad" */'./views/routerLazyLoad'),
+    },
+    {
+      path: '/about',
+      name: 'about',
+      meta: { isKeepAlive: false },
+      component: () => import(/* webpackChunkName: "about" */'./views/about'),
+    },
+    {
+      path: '/myVuex',
+      name: 'myVuex',
+      meta: { isKeepAlive: false },
+      component: () => import(/* webpackChunkName: "myVuex" */'./views/myVuex'),
+    },
+    {
+      path: '/inputTest',
+      name: 'inputTest',
+      meta: { isKeepAlive: false },
+      component: () => import(/* webpackChunkName: "inputTest" */'./views/inputTest'),
+    },
+  ],
   // base: process.env.BASE_URL,
   // scrollBehavior(to, from, savedPosition) {
   //   if (from.meta.isKeepAlive) {
@@ -22,30 +60,4 @@ export default new Router({
   //   return { x: 0, y: to.meta.savedPosition || 0 };
   // },
   //   component: () => import(/* webpackChunkName: "about" */ './views/login'),
-  routes: [
-    {
-      path: '/',
-      name: 'login',
-      meta: { isKeepAlive: false },
-      component: () => import('./views/login'),
-    },
-    {
-      path: '/imgLazyLoad',
-      name: 'imgLazyLoad',
-      meta: { isKeepAlive: false },
-      component: () => import('./views/imgLazyLoad'),
-    },
-    {
-      path: '/routerLazyLoad',
-      name: 'routerLazyLoad',
-      meta: { isKeepAlive: false },
-      component: () => import('./views/routerLazyLoad'),
-    },
-    {
-      path: '/about',
-      name: 'about',
-      meta: { isKeepAlive: false },
-      component: () => import('./views/about'),
-    },
-  ],
 })

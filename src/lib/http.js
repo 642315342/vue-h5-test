@@ -17,6 +17,10 @@ axios.interceptors.request.use(
       text: '拼命加载中',
       background: 'rgba(0, 0, 0, 0.8)',
     })
+    if (localStorage.getItem('token')) {
+    // eslint-disable-next-line no-param-reassign
+      config.headers.Authorization = localStorage.getItem('token')
+    }
     // eslint-disable-next-line no-param-reassign
     config.headers.Accept = 'application/json'
     return config
@@ -27,14 +31,13 @@ axios.interceptors.request.use(
 axios.interceptors.response.use(
   (response) => {
     loading.close()
-    const { status } = response
-    console.log('response---', response)
-    if (status === 200) {
+    const { status, data } = response
+    if (status === 200 && data.resultCode === '0000') {
       return Promise.resolve(response)
     }
     // 根据具体response结构修改
-    Message(response.statusText)
-    console.error('http-response', response)
+    Message(response.data.resultMessage)
+    console.error('http-respo1112212nse', response)
     return Promise.reject(response)
   },
   (err) => {
@@ -58,7 +61,7 @@ export function fetch(url, params = {}) {
         params,
       })
       .then((response) => {
-        resolve(response.data)
+        resolve(response.data.resultData)
       })
       .catch((err) => {
         reject(err)
