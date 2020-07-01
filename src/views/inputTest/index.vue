@@ -20,10 +20,15 @@
         <div>{{item.r}}</div>
       </div>
     </div>
+    <div class="input-group">
+      <Input v-model="from.name" label="姓名" placeholder="请输入姓名"/>
+      <Input v-model="from.cardNum" label="身份证" placeholder="请输入身份证"/>
+      <Input v-model="from.age" label="年龄" placeholder="请输入年龄"/>
+    </div>
     <div class="footer">
       <div class="service"><img src="@/assets/logo.png" alt=""> </div>
-      <div class="price"><span>￥{{price}}</span>起/年</div>
-      <div class="button">我要投保</div>
+      <div class="price"><span>￥{{price}}</span> 起/年</div>
+      <div class="button" @click="finallyClick">我要投保</div>
     </div>
   </div>
 </template>
@@ -35,38 +40,92 @@ import {
   computed,
 } from '@vue/composition-api'
 import { fetchListData } from '@/api'
+import Input from './input.vue'
 
+// 计划list Fn
+function listFn() {
+  const state = reactive({
+    listData: [],
+    curIndex: 0,
+  })
+  // methods
+  async function init() {
+    const listData = await fetchListData()
+    state.listData = listData
+  }
+  function listTitleClick(index) {
+    state.curIndex = index
+  }
+  // computed
+  const filterList = computed(() => state.listData[state.curIndex]?.children)
+  const price = computed(() => state.listData[state.curIndex]?.price)
+
+  onMounted(() => {
+    init()
+  })
+  return {
+    ...toRefs(state),
+    filterList,
+    listTitleClick,
+    price,
+  }
+}
+function inputFn() {
+  const state = reactive({
+    from: {
+      name: '',
+      cardNum: '',
+      age: '',
+    },
+    rules: {
+      name: { required: true, message: '请输入活动名称', trigger: 'blur' },
+      cardNum: { required: true, message: '请输入活动名称', trigger: 'blur' },
+      age: { required: true, message: '请输入活动名称', trigger: 'blur' },
+    },
+  })
+  function checkInput() {
+    const keys = Object.keys(state.rules)
+    for (let i = 0; i < keys.length; i++) {
+      if (state.rules[keys[i]].required) {
+        if (!state.from[keys[i]]) {
+          console.log(keys[i], 'is required')
+          break
+        }
+      }
+    }
+  }
+  return {
+    ...toRefs(state),
+    checkInput,
+  }
+}
+// finallyClick 我要投保 点击要调用 inputFn 中的校验fn
+function footerFn(inputFnData) {
+  function finallyClick() {
+    inputFnData.checkInput()
+  }
+  return {
+    finallyClick,
+  }
+}
 export default {
   setup() {
-    const state = reactive({
-      listData: [],
-      curIndex: 0,
-      price: 0,
-    })
-    // methods
-    async function init() {
-      const listData = await fetchListData()
-      state.listData = listData
-    }
-    function listTitleClick(index) {
-      state.curIndex = index
-    }
-    // computed
-    const filterList = computed(() => state.listData[state.curIndex]?.children)
-    onMounted(() => {
-      init()
-    })
+    const listFnData = listFn()
+    const inputFnData = inputFn()
+    const footerFnData = footerFn(inputFnData)
     return {
-      ...toRefs(state),
-      filterList,
-      listTitleClick,
+      ...listFnData,
+      ...inputFnData,
+      ...footerFnData,
     }
+  },
+  components: {
+    Input,
   },
 }
 </script>
-@import '@/assets/scss/minix.scss'
 <style scoped lang='scss'>
-
+@import '@/assets/scss/minix.scss';
 .input-test {
   .list {
     margin-top: 0.2rem;
@@ -98,7 +157,11 @@ export default {
       justify-content: space-between;
     }
   }
+  .input-group {
+    padding: 0 0.3rem;
+  }
   .footer {
+    width: 100%;
     height: 1rem;
     position: fixed;
     bottom: 0;
@@ -109,11 +172,17 @@ export default {
       height: 1rem;
     }
     .price {
-
+      flex: 1;
+      text-align: center;
+      span {
+        color: red;
+        font-size: 0.3rem;
+      }
     }
     .button {
       width: 2rem;
       height: 100%;
+      @include flex-center;
       background-color: red;
       color: #fff;
     }
