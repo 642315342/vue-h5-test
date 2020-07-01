@@ -21,9 +21,15 @@
       </div>
     </div>
     <div class="input-group">
-      <Input v-model="from.name" label="姓名" placeholder="请输入姓名"/>
-      <Input v-model="from.cardNum" label="身份证" placeholder="请输入身份证"/>
-      <Input v-model="from.age" label="年龄" placeholder="请输入年龄"/>
+      <FormItem prop="name">
+        <Input v-model="form.name" label="姓名" placeholder="请输入姓名" />
+      </FormItem>
+      <FormItem prop="cardNum">
+        <Input v-model="form.cardNum" label="身份证" placeholder="请输入身份证" />
+      </FormItem>
+      <FormItem prop="age">
+        <Input v-model="form.age" label="年龄" placeholder="请输入年龄" />
+      </FormItem>
     </div>
     <div class="footer">
       <div class="service"><img src="@/assets/logo.png" alt=""> </div>
@@ -38,12 +44,14 @@ import {
   onMounted,
   toRefs,
   computed,
+  provide,
 } from '@vue/composition-api'
 import { fetchListData } from '@/api'
 import Input from './input.vue'
+import FormItem from './formItem.vue'
 
 // 计划list Fn
-function listFn() {
+function useListArea() {
   const state = reactive({
     listData: [],
     curIndex: 0,
@@ -70,29 +78,21 @@ function listFn() {
     price,
   }
 }
-function inputFn() {
+function useInputArea(context) {
   const state = reactive({
-    from: {
+    form: {
       name: '',
       cardNum: '',
       age: '',
     },
     rules: {
-      name: { required: true, message: '请输入活动名称', trigger: 'blur' },
-      cardNum: { required: true, message: '请输入活动名称', trigger: 'blur' },
-      age: { required: true, message: '请输入活动名称', trigger: 'blur' },
+      name: { required: true, error: '', message: '请输入活动名称' },
+      cardNum: { required: true, error: '', message: '请输入活动名称' },
+      age: { required: true, error: '', message: '请输入年龄' },
     },
   })
   function checkInput() {
-    const keys = Object.keys(state.rules)
-    for (let i = 0; i < keys.length; i++) {
-      if (state.rules[keys[i]].required) {
-        if (!state.from[keys[i]]) {
-          console.log(keys[i], 'is required')
-          break
-        }
-      }
-    }
+    console.log(context, context.$children)
   }
   return {
     ...toRefs(state),
@@ -100,7 +100,7 @@ function inputFn() {
   }
 }
 // finallyClick 我要投保 点击要调用 inputFn 中的校验fn
-function footerFn(inputFnData) {
+function useFooterArea(inputFnData) {
   function finallyClick() {
     inputFnData.checkInput()
   }
@@ -109,10 +109,11 @@ function footerFn(inputFnData) {
   }
 }
 export default {
-  setup() {
-    const listFnData = listFn()
-    const inputFnData = inputFn()
-    const footerFnData = footerFn(inputFnData)
+  setup(props, context) {
+    const listFnData = useListArea()
+    const inputFnData = useInputArea(context)
+    const footerFnData = useFooterArea(inputFnData)
+    provide('inputFnData', inputFnData)
     return {
       ...listFnData,
       ...inputFnData,
@@ -121,6 +122,7 @@ export default {
   },
   components: {
     Input,
+    FormItem,
   },
 }
 </script>

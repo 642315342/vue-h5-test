@@ -11,7 +11,7 @@
         @focus="handleFocus"
         @blur="handleBlur"
       >
-      <div class="error" v-if="error">{{message}}</div>
+      <div class="error" v-if="error">{{error}}</div>
     </div>
     <div class="close" v-show="closeShow" @click="handleClose">X</div>
   </div>
@@ -42,8 +42,7 @@ export default {
       default: false,
     },
     error: {
-      type: Boolean,
-      default: false,
+      type: String,
     },
     message: {
       type: String,
