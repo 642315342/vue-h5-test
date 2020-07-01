@@ -43,6 +43,12 @@ export default new Router({
       meta: { isKeepAlive: false },
       component: () => import(/* webpackChunkName: "inputTest" */'./views/inputTest'),
     },
+    {
+      path: '/vue3Mouse',
+      name: 'vue3Mouse',
+      meta: { isKeepAlive: false },
+      component: () => import(/* webpackChunkName: "inputTest" */'./views/vue3Mouse'),
+    },
   ],
   // base: process.env.BASE_URL,
   // scrollBehavior(to, from, savedPosition) {
