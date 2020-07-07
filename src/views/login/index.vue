@@ -1,9 +1,10 @@
 <template>
   <div class="login">
-    <!-- <el-input class="el-input" placeholder="请输入内容" v-model="userName" clearable></el-input> -->
+    <el-input class="el-input" placeholder="请输入内容" v-model="userName" clearable></el-input>
     <!-- <el-input class="el-input" placeholder="请输入内容" v-model="password" show-password clearable> -->
     <!-- </el-input> -->
     <el-button @click="handleEvent">登录</el-button>
+    <div>{{state.test1}}</div>
     ---------------------------
     <Child :aaa="aaa" @click="changeA"/>
   </div>
@@ -11,10 +12,11 @@
 <script>
 import { mapActions } from 'vuex'
 // import Hello from '@/components/HelloWorld.vue'
-import s from '@/components/aaa'
-import { login } from '@/api'
+// import s from '@/components/aaa'
+// import { login } from '@/api'
+import { state, mutation } from '@/views/myVuex/global'
 
-console.log(s)
+console.log(state)
 export default {
   data() {
     return {
@@ -24,12 +26,16 @@ export default {
       arr1: [0, 1, 2],
       childShow: false,
       aaa: 'aaa',
+      state,
     }
   },
   computed: {
     show() {
-      return 111
+      return this.aaa
     },
+    // state() {
+    //   return state
+    // },
   },
   components: {
     Child: () => import(/* webpackPrefetch: true */'./components/Child.vue'),
@@ -56,13 +62,18 @@ export default {
       console.log('myEvent触发；', arg)
     },
     handleEvent() {
-      login({
-        username: this.userName,
-        password: this.password,
-      }).then((res) => {
-        localStorage.setItem('token', res.token)
-        this.$router.push('/about')
-      })
+      mutation.setTest1('new 111')
+      setTimeout(() => {
+        this.$router.push('about')
+      }, 1000)
+      // this.aaa = 'new aaaa'
+      // login({
+      //   username: this.userName,
+      //   password: this.password,
+      // }).then((res) => {
+      //   localStorage.setItem('token', res.token)
+      //   this.$router.push('/about')
+      // })
     },
   },
 }

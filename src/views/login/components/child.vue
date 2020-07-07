@@ -1,6 +1,7 @@
 <template>
   <div>
     <div style="height: 2rem"></div>
+    <div>{{aaa}}</div>
     <Input
       ref="value1"
       v-model="from.value1"
@@ -42,6 +43,7 @@
 import Input from './input.vue'
 
 export default {
+  props: ['aaa'],
   data() {
     return {
       _qa: '222',
@@ -82,6 +84,12 @@ export default {
   },
   components: {
     Input,
+  },
+  beforeUpdate() {
+    console.log('子组件 beforeUpdate')
+  },
+  updated() {
+    console.log('子组件 updated')
   },
   methods: {
     checkRules() {
@@ -124,7 +132,7 @@ export default {
     },
     handleSubmit() {
       console.log('22--222', this._data.$qa, this.$data._qa)
-
+      this.aaa = 111
       this.checkRules()
       if (!this.isError) {
         console.log('提交')
