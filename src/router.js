@@ -4,7 +4,7 @@ import Router from 'vue-router'
 
 Vue.use(Router)
 
-export default new Router({
+const router = new Router({
   mode: 'history',
   routes: [
     {
@@ -49,6 +49,12 @@ export default new Router({
       meta: { isKeepAlive: false },
       component: () => import(/* webpackChunkName: "inputTest" */'./views/vue3Mouse'),
     },
+    {
+      path: '/router/:id',
+      name: 'router',
+      meta: { isKeepAlive: false },
+      component: () => import(/* webpackChunkName: "router" */'./views/router'),
+    },
   ],
   // base: process.env.BASE_URL,
   // scrollBehavior(to, from, savedPosition) {
@@ -67,3 +73,11 @@ export default new Router({
   // },
   //   component: () => import(/* webpackChunkName: "about" */ './views/login'),
 })
+// router.beforeEach((to, from, next) => {
+//   console.log('beforeEach', to, from)
+//   next()
+// })
+// router.afterEach((to, from) => {
+//   console.log('afterEach', to, from)
+// })
+export default router
