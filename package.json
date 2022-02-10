@@ -16,7 +16,7 @@
     "cross-env": "^7.0.2",
     "element-ui": "^2.4.5",
     "eslint-plugin-html": "^6.0.1",
-    "node-sass": "^4.13.1",
+    "node-sass": "^7.0.0",
     "vue": "^2.6.10",
     "vue-router": "^3.0.3",
     "vuex": "^3.0.1"
